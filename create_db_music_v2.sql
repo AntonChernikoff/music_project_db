@@ -1,5 +1,5 @@
 CREATE TABLE public.tbl_genre (
-	id int4 NOT NULL,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	genre varchar NULL,
 	description varchar NULL,
 	start_year date NULL,
@@ -7,15 +7,13 @@ CREATE TABLE public.tbl_genre (
 );
 
 CREATE TABLE public.tbl_sinders (
-	id int4 NOT NULL,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	sinder varchar NULL,
 	alias varchar NULL,
 	email_address varchar NULL,
 	country varchar NULL,
 	date_of_birth date NULL,
-	id_genre int4 NULL,
 	CONSTRAINT tbl_sinders_pk PRIMARY KEY (id)
-    --CONSTRAINT tbl_sinders_fk_genre FOREIGN KEY (id_genre) REFERENCES public.tbl_genre(id)
 );
 
 create table if not exists tbl_sinders_genre (
@@ -25,14 +23,11 @@ create table if not exists tbl_sinders_genre (
 );
 
 CREATE TABLE public.tbl_albums (
-	id int4 NOT NULL,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	album varchar NULL,
-	city varchar NULL,
 	country varchar NULL,
 	"year" date NULL,
-	id_sinder int4 NULL,
 	CONSTRAINT tbl_albums_pk PRIMARY KEY (id)
-	--CONSTRAINT tbl_albums_fk_tbl_sinders FOREIGN KEY (id_sinder) REFERENCES public.tbl_sinders(id)
 );
 
 create table if not exists tbl_albums_sinders (
@@ -42,17 +37,17 @@ create table if not exists tbl_albums_sinders (
 );
 
 CREATE TABLE public.tbl_tracks (
-	id int4 NOT NULL,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	track varchar not NULL,
 	description text NULL,
 	duration int4 not NULL,
 	id_album int4 null,
-	CONSTRAINT tbl_tracks_pk PRIMARY KEY (id)
+	CONSTRAINT tbl_tracks_pk PRIMARY KEY (id),
 	CONSTRAINT tbl_tracks_fk_tbl_albums FOREIGN KEY (id_album) REFERENCES public.tbl_albums(id)
 );
 
 create table public.tbl_collections (
-	id int4 not NULL,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	collection varchar NULL,
 	description text NULL,
 	"year" date NULL,
