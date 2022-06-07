@@ -14,7 +14,7 @@ CREATE TABLE public.tbl_sinders (
 	country varchar NULL,
 	date_of_birth date NULL,
 	id_music_style int4 NULL,
-	CONSTRAINT tbl_sinders_pk PRIMARY KEY (id)
+	CONSTRAINT tbl_sinders_pk PRIMARY KEY (id),
     CONSTRAINT tbl_sinders_fk_tbl_music_style FOREIGN KEY (id_music_style) REFERENCES public.tbl_music_style(id)
 );
 
@@ -39,5 +39,12 @@ CREATE TABLE public.tbl_tracks (
 	id_album int4 NULL,
 	id_music_style int4 NULL,
 	CONSTRAINT tbl_tracks_pk PRIMARY KEY (id),
-	CONSTRAINT tbl_tracks_fk_tbl_albums FOREIGN KEY (id_album) REFERENCES public.tbl_albums(id),
+	CONSTRAINT tbl_tracks_fk_tbl_albums FOREIGN KEY (id_album) REFERENCES public.tbl_albums(id)
 );
+
+/*
+drop table public.tbl_tracks ;
+drop table public.tbl_albums ;
+drop table public.tbl_sinders ;
+drop table public.tbl_music_style ;
+*/
