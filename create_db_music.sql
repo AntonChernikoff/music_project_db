@@ -8,7 +8,7 @@ CREATE TABLE public.tbl_music_style (
 
 CREATE TABLE public.tbl_sinders (
 	id int4 NOT NULL,
-	singer varchar NULL,
+	sinder varchar NULL,
 	alias varchar NULL,
 	email_address varchar NULL,
 	country varchar NULL,
@@ -24,9 +24,9 @@ CREATE TABLE public.tbl_albums (
 	city varchar NULL,
 	country varchar NULL,
 	"year" date NULL,
-	id_singer int4 NULL,
+	id_sinder int4 NULL,
 	CONSTRAINT tbl_albums_pk PRIMARY KEY (id),
-	CONSTRAINT tbl_albums_fk_tbl_sinders FOREIGN KEY (id_singer) REFERENCES public.tbl_sinders(id)
+	CONSTRAINT tbl_albums_fk_tbl_sinders FOREIGN KEY (id_sinder) REFERENCES public.tbl_sinders(id)
 );
 
 CREATE TABLE public.tbl_tracks (
