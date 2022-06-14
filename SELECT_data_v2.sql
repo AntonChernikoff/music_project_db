@@ -13,16 +13,12 @@ select
 	count(*) 
 from 
 	tbl_tracks 
+	left join tbl_albums 
+	on tbl_albums.id = tbl_tracks.id_album 
 where 
-	id_album in (
-				select 
-					id 
-				from 
-					tbl_albums
-				where 
-					extract(year from year) >= 2019 
-					and extract(year from year) <=2020
-				);
+	extract(year from tbl_albums.year) >= 2019 
+	and extract(year from tbl_albums.year) <=2020
+;
 			
 --средняя продолжительность треков по каждому альбому;
 select ta.album , avg(tt.duration) as avg_duration 
@@ -34,12 +30,15 @@ group by ta.album
 having avg(tt.duration) notnull ;
 
 --все исполнители, которые не выпустили альбомы в 2020 году;
-select id, sinder 
-from tbl_sinders 
-where not id in 
-	(select id_sinder from tbl_albums_sinders where id_album in 
-		(select id from tbl_albums where extract(year from year) = 2020)
-	);
+select 
+	id, sinder 
+from 
+	tbl_sinders 
+	left join tbl_albums_sinders on tbl_albums_sinders.id_sinder = tbl_sinders.id 
+	left join tbl_albums on tbl_albums.id = tbl_albums_sinders.id_album 
+where 
+	extract(year from tbl_albums.year) = 2020
+;
 --названия сборников, в которых присутствует конкретный исполнитель (выберите сами);
 
 select  
@@ -56,27 +55,34 @@ where
 	
 --название альбомов, в которых присутствуют исполнители более 1 жанра;
 select 
-	album 
+	tbl_albums.album, count(tbl_sinders_genre.id_genre)
 from 
 	tbl_albums 
-where 
-	id in (
-		select 
-			id_album 
-		from 
-			tbl_albums_sinders 
-		where 
-			id_sinder in (select id_sinder from tbl_sinders_genre group by id_sinder having count(id_genre) > 1)
-		);  
+	left join tbl_albums_sinders on tbl_albums_sinders.id_album = tbl_albums.id 
+	left join tbl_sinders_genre on tbl_sinders_genre.id_sinder = tbl_albums_sinders.id_sinder 
+group by tbl_albums.album  
+having count(tbl_sinders_genre.id_genre) > 1
+;
+
+
+
 --наименование треков, которые не входят в сборники;
-select track from tbl_tracks where not id in (select id_track from tbl_collections_tracks); 
+select track 
+from 
+	tbl_tracks 
+	left join tbl_collections_tracks on tbl_collections_tracks.id_track = tbl_tracks.id 
+where 
+	tbl_collections_tracks.id_collection is null; 
+
 --исполнителя(-ей), написавшего самый короткий по продолжительности трек (теоретически таких треков может быть несколько);
-select sinder from tbl_sinders where id in 
-	(select id_sinder from tbl_albums_sinders where id_album in 
-		(select id_album from tbl_tracks where duration = 
-			(select min(duration) from tbl_tracks)
-		)
-	);
+select sinder 
+from 
+	tbl_sinders 
+	left join tbl_albums_sinders on tbl_albums_sinders.id_sinder = tbl_sinders.id 
+	left join tbl_tracks on tbl_tracks.id_album = tbl_albums_sinders.id_album 
+where
+	tbl_tracks.duration = (select min(duration) from tbl_tracks)
+;
 --название альбомов, содержащих наименьшее количество треков.
 
 select 
